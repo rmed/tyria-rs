@@ -8,6 +8,8 @@ repository = "https://github.com/rmed/tyria-rs.git"
 readme = "README.md"
 keywords = ["gw2", "guild wars", "api", "wrapper"]
 license = "MIT"
+exclude = [".gitignore"]
+doc = true
 
 [lib]
 name = "tyria"
