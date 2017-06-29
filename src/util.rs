@@ -22,6 +22,9 @@
 
 /// Utility code
 
+use reqwest::{Response, StatusCode};
+use serde::de::DeserializeOwned;
+use types::APIError;
 
 /// Make a parameter out of a number
 ///
@@ -131,4 +134,30 @@ pub fn strings_to_param(param: &str, values: Vec<&str>) -> String {
     }
 
     result
+}
+
+/// Parse an API response into the appropriate type
+///
+/// This expects to know the data type to use when parsing the JSON
+///
+/// # Arguments
+///
+/// * `response` - Response from the API
+/// * `valid` - Valid HTTP code that causes the data to be parsed
+/// * `invalid` - Invalid HTTP code that obtains an `APIError` with a message
+///         from the API
+pub fn parse_response<T>(
+    response: &mut Response,
+    valid: StatusCode,
+    invalid: StatusCode
+    ) -> Result<T, APIError> where T: DeserializeOwned {
+
+    if response.status().eq(&valid) {
+        return Ok(response.json::<T>().unwrap());
+
+    } else if response.status().eq(&invalid) {
+        return Err(response.json::<APIError>().unwrap());
+    }
+
+    Err(APIError::new("unknown status code"))
 }

@@ -27,7 +27,8 @@ use util::{
     number_to_param,
     numbers_to_param,
     string_to_param,
-    strings_to_param
+    strings_to_param,
+    parse_response
 };
 use types::{
     APIError,
@@ -73,17 +74,13 @@ macro_rules! get_endpoint {
 /// ```
 pub fn get_achievement_ids(client: &APIClient) -> Result<Vec<i32>, APIError> {
     let mut response = client.make_request(get_endpoint!("all_achievements"))
-        .expect("Failed to get achievement IDs");
+        .expect("failed to get achievement IDs");
 
-    // Check HTTP codes
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<i32>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<i32>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievement
@@ -109,16 +106,13 @@ pub fn get_achievement(client: &APIClient, id: i32)
     let param = number_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievements_id", param))
-        .expect("Failed to get achievement");
+        .expect("failed to get achievement");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Achievement>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Achievement>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievements
@@ -144,16 +138,13 @@ pub fn get_achievements(client: &APIClient, ids: Vec<i32>)
     let params = numbers_to_param("ids", &ids);
     let mut response = client
         .make_request(&get_endpoint!("achievements_id", params))
-        .expect("Failed to get achievements");
+        .expect("failed to get achievements");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<Achievement>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<Achievement>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain daily current achievements
@@ -177,16 +168,13 @@ pub fn get_daily_achievements(client: &APIClient)
 
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements"))
-        .expect("Failed to get achievements");
+        .expect("failed to get achievements");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<DailyAchievements>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<DailyAchievements>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain daily achievements for tomorrow
@@ -210,16 +198,13 @@ pub fn get_daily_achievements_tomorrow(client: &APIClient)
 
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements_tomorrow"))
-        .expect("Failed to get achievements");
+        .expect("failed to get achievements");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<DailyAchievements>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<DailyAchievements>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain a list of all the achievement group IDs
@@ -243,17 +228,13 @@ pub fn get_achievement_group_ids(client: &APIClient)
 
     let mut response = client
         .make_request(get_endpoint!("all_achievement_groups"))
-        .expect("Failed to get group IDs");
+        .expect("failed to get group IDs");
 
-    // Check HTTP codes
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<String>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<String>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievement group
@@ -282,16 +263,13 @@ pub fn get_achievement_group(client: &APIClient, id: &str)
     let param = string_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievement_groups_id", param))
-        .expect("Failed to get group");
+        .expect("failed to get group");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<AchievementGroup>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<AchievementGroup>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievement groups
@@ -323,16 +301,13 @@ pub fn get_achievement_groups(client: &APIClient, ids: Vec<&str>)
     let param = strings_to_param("ids", ids);
     let mut response = client
         .make_request(&get_endpoint!("achievement_groups_id", param))
-        .expect("Failed to get groups");
+        .expect("failed to get groups");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<AchievementGroup>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<AchievementGroup>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain a list of all the achievement category IDs
@@ -356,17 +331,13 @@ pub fn get_achievement_category_ids(client: &APIClient)
 
     let mut response = client
         .make_request(get_endpoint!("all_achievement_categories"))
-        .expect("Failed to get category IDs");
+        .expect("failed to get category IDs");
 
-    // Check HTTP codes
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<i32>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<i32>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievement category
@@ -392,16 +363,13 @@ pub fn get_achievement_category(client: &APIClient, id: i32)
     let param = number_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievement_categories_id", param))
-        .expect("Failed to get category");
+        .expect("failed to get category");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<AchievementCategory>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<AchievementCategory>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }
 
 /// Obtain details for the specified achievement categories
@@ -427,14 +395,11 @@ pub fn get_achievement_categories(client: &APIClient, ids: Vec<i32>)
     let param = numbers_to_param("ids", &ids);
     let mut response = client
         .make_request(&get_endpoint!("achievement_categories_id", param))
-        .expect("Failed to get categories");
+        .expect("failed to get categories");
 
-    if response.status().eq(&StatusCode::Ok) {
-        return Ok(response.json::<Vec<AchievementCategory>>().unwrap());
-
-    } else if response.status().eq(&StatusCode::NotFound) {
-        return Err(response.json::<APIError>().unwrap());
-    }
-
-    Err(APIError::new("unknown status code"))
+    parse_response::<Vec<AchievementCategory>>(
+        &mut response,
+        StatusCode::Ok,
+        StatusCode::NotFound
+    )
 }

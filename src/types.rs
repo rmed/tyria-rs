@@ -22,6 +22,10 @@
 
 /// Type definitions for the deserialization of API results
 
+use chrono::prelude::*;
+use chrono::DateTime;
+
+
 /// API errors
 #[derive(Deserialize, Debug)]
 pub struct APIError {
@@ -35,6 +39,76 @@ impl APIError {
             text: text.to_string()
         }
     }
+}
+
+/// User account
+#[derive(Deserialize, Debug)]
+pub struct Account {
+    id: String,
+    age: i32,
+    name: String,
+    world: i32,
+    #[serde(default)]
+    guilds: Vec<String>,
+    #[serde(default)]
+    guild_leader: Vec<String>,
+    created: DateTime<Utc>,
+    access: String,
+    commander: bool,
+    #[serde(default)]
+    fractal_level: i32,
+    #[serde(default)]
+    daily_ap: i32,
+    #[serde(default)]
+    monthly_ap: i32,
+    #[serde(default)]
+    wvw_rank: i32
+}
+
+/// Achievements that the account has progress on
+#[derive(Deserialize, Debug)]
+pub struct AccountAchievement {
+    id: i32,
+    #[serde(default)]
+    current: i32,
+    #[serde(default)]
+    max: i32,
+    done: bool,
+    #[serde(default)]
+    repeated: i32,
+    #[serde(default)]
+    bits: Vec<i32>
+}
+
+/// Currencies in an account's wallet
+#[derive(Deserialize, Debug)]
+pub struct AccountCurrency {
+    id: i32,
+    value: i32
+}
+
+/// Finishers unlocked for the account
+#[derive(Deserialize, Debug)]
+pub struct AccountFinisher {
+    id: i32,
+    permanent: bool,
+    #[serde(default)]
+    quantity: i32,
+}
+
+/// Unlocked masteries for the account
+#[derive(Deserialize, Debug)]
+pub struct AccountMastery {
+    id: i32,
+    level: i32
+}
+
+/// Materials stored in the account's vault
+#[derive(Deserialize, Debug)]
+pub struct AccountMaterial {
+    id: i32,
+    category: i32,
+    count: i32
 }
 
 /// Player achievements
@@ -123,6 +197,169 @@ pub struct AchievementTier {
     points: i32
 }
 
+/// Equiped bags in a character
+#[derive(Deserialize, Debug)]
+pub struct Bag {
+    id: i32,
+    size: i32,
+    inventory: Vec<BagSlot>
+}
+
+/// Bag slot
+#[derive(Deserialize, Debug)]
+pub struct BagSlot {
+    id: i32,
+    count: i32,
+    #[serde(default)]
+    infusions: Vec<i32>,
+    #[serde(default)]
+    upgrades: Vec<i32>,
+    #[serde(default)]
+    skin: i32,
+    #[serde(default)]
+    stats: Option<EquipmentStats>,
+    #[serde(default)]
+    binding: String,
+    #[serde(default)]
+    bound_to: String
+}
+
+/// Item slot in the bank
+#[derive(Deserialize, Debug)]
+pub struct BankSlot {
+    id: i32,
+    count: i32,
+    #[serde(default)]
+    skin: i32,
+    #[serde(default)]
+    upgrades: Vec<i32>,
+    #[serde(default)]
+    infusions: Vec<i32>,
+    #[serde(default)]
+    binding: String,
+    #[serde(default)]
+    charges: i32,
+    #[serde(default)]
+    bound_to: String
+}
+
+/// Home instance cats
+#[derive(Deserialize, Debug)]
+pub struct Cat {
+    id: i32,
+    #[serde(default)]
+    hint: String
+}
+
+/// Character information
+#[derive(Deserialize, Debug)]
+pub struct Character {
+    // Backstory
+    #[serde(default)]
+    backstory: Vec<String>,
+
+    // Core
+    name: String,
+    race: String,
+    gender: String,
+    profession: String,
+    level: i32,
+    #[serde(default)]
+    guild: String,
+    age: i32,
+    created: DateTime<Utc>,
+    deaths: i32,
+    #[serde(default)]
+    title: i32,
+
+    // Crafting
+    crafting: Vec<CraftingDiscipline>,
+
+    // Equipment
+    equipment: Vec<Equipment>,
+    equipment_pvp: CharacterPvPEquipment,
+
+    // Inventory
+    bags: Vec<Bag>,
+
+    // Recipes
+    recipes: Vec<i32>,
+
+    // Skills
+    skills: CharacterSkills,
+
+    // Specializations
+    specializations: CharacterSpecializations,
+
+    // Training
+    training: Vec<CharacterTraining>,
+
+    // WvW abilities
+    wvw_abilities: Vec<CharacterWvWAbility>,
+}
+
+/// PVP equipment setup
+#[derive(Deserialize, Debug)]
+pub struct CharacterPvPEquipment {
+    amulet: i32,
+    rune: i32,
+    sigils: Vec<i32>
+}
+
+/// Slotted character skills per game mode
+#[derive(Deserialize, Debug)]
+pub struct CharacterSkills {
+    pve: CharacterSkillSet,
+    pvp: CharacterSkillSet,
+    wvw: CharacterSkillSet
+}
+
+/// Set of skills slotted
+#[derive(Deserialize, Debug)]
+pub struct CharacterSkillSet {
+    heal: i32,
+    utilities: Vec<i32>,
+    elite: i32
+}
+
+/// Current specializations and traits in a character
+#[derive(Deserialize, Debug)]
+pub struct CharacterSpecializations {
+    pve: Vec<CharacterSpecialization>,
+    pvp: Vec<CharacterSpecialization>,
+    wvw: Vec<CharacterSpecialization>
+}
+
+/// Current specializations and traits in a character
+#[derive(Deserialize, Debug)]
+pub struct CharacterSpecialization {
+    id: i32,
+    traits: Vec<i32>
+}
+
+/// Skill tree item
+#[derive(Deserialize, Debug)]
+pub struct CharacterTraining {
+    id: i32,
+    spent: i32,
+    done: bool
+}
+
+/// Character WvW abilities
+#[derive(Deserialize, Debug)]
+pub struct CharacterWvWAbility {
+    id: i32,
+    rank: i32
+}
+
+/// A character's crafting discipline
+#[derive(Deserialize, Debug)]
+pub struct CraftingDiscipline {
+    discipline: String,
+    rating: i32,
+    active: bool
+}
+
 /// Daily achievements
 #[derive(Deserialize, Debug)]
 pub struct DailyAchievements {
@@ -146,4 +383,76 @@ pub struct DailyAchievement {
 pub struct DailyAchievementLevel {
     min: i32,
     max: i32
+}
+
+/// Piece of equipment on a character
+#[derive(Deserialize, Debug)]
+pub struct Equipment {
+    id: i32,
+    slot: String,
+    #[serde(default)]
+    infusions: Vec<i32>,
+    #[serde(default)]
+    upgrades: Vec<i32>,
+    #[serde(default)]
+    skin: i32,
+    #[serde(default)]
+    stats: Option<EquipmentStats>,
+    #[serde(default)]
+    binding: String,
+    #[serde(default)]
+    charges: i32,
+    #[serde(default)]
+    bound_to: String,
+    #[serde(default)]
+    dyes: Vec<i32>
+}
+
+/// Chosen stats of an equiped item
+#[derive(Deserialize, Debug)]
+pub struct EquipmentStats {
+    id: i32,
+    #[serde(default)]
+    attributes: Option<EquipmentAttributes>,
+}
+
+/// Summary of the stats on an item
+#[derive(Deserialize, Debug)]
+pub struct EquipmentAttributes {
+    #[serde(default)]
+    #[serde(rename = "Power")]
+    power: i32,
+    #[serde(default)]
+    #[serde(rename = "Precision")]
+    precision: i32,
+    #[serde(default)]
+    #[serde(rename = "Toughness")]
+    toughness: i32,
+    #[serde(default)]
+    #[serde(rename = "Vitality")]
+    vitality: i32,
+    #[serde(default)]
+    #[serde(rename = "ConditionDamage")]
+    condition_damage: i32,
+    #[serde(default)]
+    #[serde(rename = "ConditionDuration")]
+    condition_duration: i32,
+    #[serde(default)]
+    #[serde(rename = "CritDamage")]
+    critical_damage: i32,
+    #[serde(default)]
+    #[serde(rename = "Healing")]
+    healing: i32,
+    #[serde(default)]
+    #[serde(rename = "BoonDuration")]
+    boon_duration: i32
+}
+
+/// Shared inventory slot
+#[derive(Deserialize, Debug)]
+pub struct InventorySlot {
+    id: i32,
+    count: i32,
+    #[serde(default)]
+    binding: String
 }

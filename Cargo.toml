@@ -1,6 +1,6 @@
 [package]
 name = "tyria"
-version = "0.1.0"
+version = "0.0.1"
 authors = ["Rafael Medina García <rafamedgar@gmail.com>"]
 description = "Wrapper for the Guild Wars 2 API"
 homepage = "https://github.com/rmed/tyria-rs"
@@ -13,6 +13,7 @@ license = "MIT"
 name = "tyria"
 
 [dependencies]
+chrono = { version = "0.4", features = ["serde"] }
 hyper = "0.11"
 reqwest = "0.6.2"
 serde = "1.0"

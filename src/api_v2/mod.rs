@@ -21,3 +21,5 @@
 // SOFTWARE.
 
 pub mod achievements;
+pub mod account;
+pub mod characters;

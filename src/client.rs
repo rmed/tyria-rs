@@ -22,7 +22,7 @@
 
 use hyper::header::LanguageTag;
 use reqwest;
-use reqwest::header::{Headers, AcceptLanguage, qitem};
+use reqwest::header::{Headers, AcceptLanguage, Authorization, qitem};
 
 macro_rules! get_request_url {
     ($endpoint: expr) => {format!("https://api.guildwars2.com{}", $endpoint)}
@@ -53,12 +53,47 @@ impl APIClient {
         }
     }
 
+    /// Make an authenticated request to the API
+    ///
+    /// This expects the token to have been previously configured when
+    /// initialising the client
+    ///
+    /// # Arguments
+    ///
+    /// * `url` - URL to make the request to
+    pub fn make_authenticated_request(&self, url: &str)
+        -> reqwest::Result<reqwest::Response> {
+
+        let full_url = get_request_url!(url);
+        let mut headers = Headers::new();
+
+        // Set authentication
+        let token = self.token.to_owned();
+        headers.set(
+            Authorization(
+                format!("Bearer {}", token.expect("token is not configured"))
+            )
+        );
+
+        // Set language
+        let mut langtag: LanguageTag = Default::default();
+        langtag.language = Some(self.lang.to_owned());
+        headers.set(
+            AcceptLanguage(vec![
+                qitem(langtag),
+            ])
+        );
+
+        self.client.get(&full_url).headers(headers).send()
+    }
+
     /// Make a request to the API
     ///
     /// # Arguments
     ///
     /// * `url` - URL to make the request to
-    pub fn make_request(&self, url: &str) -> reqwest::Result<reqwest::Response> {
+    pub fn make_request(&self, url: &str)
+        -> reqwest::Result<reqwest::Response> {
 
         let full_url = get_request_url!(url);
 
