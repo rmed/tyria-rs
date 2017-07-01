@@ -55,7 +55,7 @@ macro_rules! get_endpoint {
 ///
 /// ```
 /// use tyria::client::APIClient;
-/// use tyria::api_v2::character::get_character_names;
+/// use tyria::api_v2::characters::get_character_names;
 ///
 /// let client = APIClient::new("en", Some("mykey".to_string()));
 ///
@@ -71,7 +71,7 @@ pub fn get_character_names(client: &APIClient)
     parse_response::<Vec<String>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -86,13 +86,13 @@ pub fn get_character_names(client: &APIClient)
 ///
 /// ```
 /// use tyria::client::APIClient;
-/// use tyria::api_v2::character::get_character;
+/// use tyria::api_v2::characters::get_character;
 ///
 /// let client = APIClient::new("en", Some("mykey".to_string()));
 ///
 /// let my_character = get_character(&client, "My Char");
 /// ```
-pub fn get_achievement(client: &APIClient, name: &str)
+pub fn get_character(client: &APIClient, name: &str)
     -> Result<Character, APIError> {
 
     let param = string_to_param("id", name);
@@ -104,6 +104,6 @@ pub fn get_achievement(client: &APIClient, name: &str)
     parse_response::<Character>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound, StatusCode::Forbidden]
     )
 }

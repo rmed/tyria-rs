@@ -79,7 +79,7 @@ pub fn get_achievement_ids(client: &APIClient) -> Result<Vec<i32>, APIError> {
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -111,7 +111,7 @@ pub fn get_achievement(client: &APIClient, id: i32)
     parse_response::<Achievement>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -143,7 +143,7 @@ pub fn get_achievements(client: &APIClient, ids: Vec<i32>)
     parse_response::<Vec<Achievement>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -173,7 +173,7 @@ pub fn get_daily_achievements(client: &APIClient)
     parse_response::<DailyAchievements>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -203,7 +203,7 @@ pub fn get_daily_achievements_tomorrow(client: &APIClient)
     parse_response::<DailyAchievements>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -233,7 +233,7 @@ pub fn get_achievement_group_ids(client: &APIClient)
     parse_response::<Vec<String>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -268,7 +268,7 @@ pub fn get_achievement_group(client: &APIClient, id: &str)
     parse_response::<AchievementGroup>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -306,7 +306,7 @@ pub fn get_achievement_groups(client: &APIClient, ids: Vec<&str>)
     parse_response::<Vec<AchievementGroup>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -324,7 +324,7 @@ pub fn get_achievement_groups(client: &APIClient, ids: Vec<&str>)
 ///
 /// let client = APIClient::new("en", None);
 ///
-/// let group_ids = get_achievement_category_ids(&client);
+/// let category_ids = get_achievement_category_ids(&client);
 /// ```
 pub fn get_achievement_category_ids(client: &APIClient)
     -> Result<Vec<i32>, APIError> {
@@ -336,7 +336,7 @@ pub fn get_achievement_category_ids(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -355,7 +355,7 @@ pub fn get_achievement_category_ids(client: &APIClient)
 ///
 /// let client = APIClient::new("en", None);
 ///
-/// let group = get_achievement_category(&client, 42);
+/// let category = get_achievement_category(&client, 42);
 /// ```
 pub fn get_achievement_category(client: &APIClient, id: i32)
     -> Result<AchievementCategory, APIError> {
@@ -368,7 +368,7 @@ pub fn get_achievement_category(client: &APIClient, id: i32)
     parse_response::<AchievementCategory>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }
 
@@ -387,7 +387,7 @@ pub fn get_achievement_category(client: &APIClient, id: i32)
 ///
 /// let client = APIClient::new("en", None);
 ///
-/// let group = get_achievement_categories(&client, vec![1, 2, 3, 42]);
+/// let categories = get_achievement_categories(&client, vec![1, 2, 3, 42]);
 /// ```
 pub fn get_achievement_categories(client: &APIClient, ids: Vec<i32>)
     -> Result<Vec<AchievementCategory>, APIError> {
@@ -400,6 +400,6 @@ pub fn get_achievement_categories(client: &APIClient, ids: Vec<i32>)
     parse_response::<Vec<AchievementCategory>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::NotFound
+        vec![StatusCode::NotFound]
     )
 }

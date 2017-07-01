@@ -101,7 +101,7 @@ pub fn get_account(client: &APIClient)
     parse_response::<Account>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -131,7 +131,7 @@ pub fn get_account_achievements(client: &APIClient)
     parse_response::<Vec<AccountAchievement>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -162,7 +162,7 @@ pub fn get_account_bank(client: &APIClient)
     parse_response::<Vec<BankSlot>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -192,7 +192,7 @@ pub fn get_account_dungeons(client: &APIClient)
     parse_response::<Vec<String>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -222,7 +222,7 @@ pub fn get_account_dyes(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -252,7 +252,7 @@ pub fn get_account_finishers(client: &APIClient)
     parse_response::<Vec<AccountFinisher>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -282,7 +282,7 @@ pub fn get_account_cats(client: &APIClient)
     parse_response::<Vec<Cat>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -312,7 +312,7 @@ pub fn get_account_nodes(client: &APIClient)
     parse_response::<Vec<String>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -343,7 +343,7 @@ pub fn get_account_inventory(client: &APIClient)
     parse_response::<Vec<InventorySlot>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -373,7 +373,7 @@ pub fn get_account_masteries(client: &APIClient)
     parse_response::<Vec<AccountMastery>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -403,7 +403,7 @@ pub fn get_account_materials(client: &APIClient)
     parse_response::<Vec<AccountMaterial>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -433,7 +433,7 @@ pub fn get_account_minis(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -463,7 +463,7 @@ pub fn get_account_outfits(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -493,7 +493,7 @@ pub fn get_account_raids(client: &APIClient)
     parse_response::<Vec<String>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -523,7 +523,7 @@ pub fn get_account_recipes(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -553,7 +553,7 @@ pub fn get_account_skins(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -583,7 +583,7 @@ pub fn get_account_titles(client: &APIClient)
     parse_response::<Vec<i32>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
 
@@ -613,6 +613,6 @@ pub fn get_account_wallet(client: &APIClient)
     parse_response::<Vec<AccountCurrency>>(
         &mut response,
         StatusCode::Ok,
-        StatusCode::Forbidden
+        vec![StatusCode::Forbidden]
     )
 }
