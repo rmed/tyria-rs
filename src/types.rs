@@ -298,6 +298,23 @@ pub struct Character {
     wvw_abilities: Vec<CharacterWvWAbility>,
 }
 
+/// Core information of a character
+#[derive(Deserialize, Debug)]
+pub struct CharacterCore {
+    name: String,
+    race: String,
+    gender: String,
+    profession: String,
+    level: i32,
+    #[serde(default)]
+    guild: String,
+    age: i32,
+    created: DateTime<Utc>,
+    deaths: i32,
+    #[serde(default)]
+    title: i32,
+}
+
 /// PVP equipment setup
 #[derive(Deserialize, Debug)]
 pub struct CharacterPvPEquipment {
@@ -455,4 +472,38 @@ pub struct InventorySlot {
     count: i32,
     #[serde(default)]
     binding: String
+}
+
+/// Character progress in Super Adventure Box
+#[derive(Deserialize, Debug)]
+pub struct SABProgress {
+    #[serde(default)]
+    zones: Vec<SABZone>,
+    #[serde(default)]
+    unlocks: Vec<SABUnlock>,
+    #[serde(default)]
+    songs: Vec<SABSong>
+}
+
+/// Specifies unlocked songs on the character
+#[derive(Deserialize, Debug)]
+pub struct SABSong {
+    id: i32,
+    name: String
+}
+
+/// Specifies unlocks on a character
+#[derive(Deserialize, Debug)]
+pub struct SABUnlock {
+    id: i32,
+    name: String
+}
+
+/// Specifies which worlds, and in which difficulty, a character has cleared
+#[derive(Deserialize, Debug)]
+pub struct SABZone {
+    id: i32,
+    mode: String,
+    world: i32,
+    zone: i32
 }
