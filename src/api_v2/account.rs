@@ -333,14 +333,14 @@ pub fn get_account_nodes(client: &APIClient)
 /// let my_inventory = get_account_inventory(&client);
 /// ```
 pub fn get_account_inventory(client: &APIClient)
-    -> Result<Vec<InventorySlot>, APIError> {
+    -> Result<Vec<Option<InventorySlot>>, APIError> {
 
     //TODO check behaviour with empty slots
     let mut response = client
         .make_authenticated_request(&get_endpoint!("inventory"))
         .expect("failed to get shared account inventory slots");
 
-    parse_response::<Vec<InventorySlot>>(
+    parse_response::<Vec<Option<InventorySlot>>>(
         &mut response,
         StatusCode::Ok,
         vec![StatusCode::Forbidden]
