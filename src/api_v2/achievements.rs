@@ -100,8 +100,10 @@ pub fn get_achievement_ids(client: &APIClient) -> Result<Vec<i32>, APIError> {
 ///
 /// let achievement_ids = get_achievement(&client, 42);
 /// ```
-pub fn get_achievement(client: &APIClient, id: i32)
-    -> Result<Achievement, APIError> {
+pub fn get_achievement(
+    client: &APIClient,
+    id: i32
+) -> Result<Achievement, APIError> {
 
     let param = number_to_param("id", id);
     let mut response = client
@@ -132,8 +134,10 @@ pub fn get_achievement(client: &APIClient, id: i32)
 ///
 /// let achievement_ids = get_achievements(&client, vec![1, 2, 42]);
 /// ```
-pub fn get_achievements(client: &APIClient, ids: Vec<i32>)
-    -> Result<Vec<Achievement>, APIError> {
+pub fn get_achievements(
+    client: &APIClient,
+    ids: Vec<i32>
+) -> Result<Vec<Achievement>, APIError> {
 
     let params = numbers_to_param("ids", &ids);
     let mut response = client
@@ -163,8 +167,9 @@ pub fn get_achievements(client: &APIClient, ids: Vec<i32>)
 ///
 /// let achievements = get_daily_achievements(&client);
 /// ```
-pub fn get_daily_achievements(client: &APIClient)
-    -> Result<DailyAchievements, APIError> {
+pub fn get_daily_achievements(
+    client: &APIClient
+) -> Result<DailyAchievements, APIError> {
 
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements"))
@@ -193,8 +198,9 @@ pub fn get_daily_achievements(client: &APIClient)
 ///
 /// let achievements = get_daily_achievements_tomorrow(&client);
 /// ```
-pub fn get_daily_achievements_tomorrow(client: &APIClient)
-    -> Result<DailyAchievements, APIError> {
+pub fn get_daily_achievements_tomorrow(
+    client: &APIClient
+) -> Result<DailyAchievements, APIError> {
 
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements_tomorrow"))
@@ -223,8 +229,9 @@ pub fn get_daily_achievements_tomorrow(client: &APIClient)
 ///
 /// let group_ids = get_achievement_group_ids(&client);
 /// ```
-pub fn get_achievement_group_ids(client: &APIClient)
-    -> Result<Vec<String>, APIError> {
+pub fn get_achievement_group_ids(
+    client: &APIClient
+) -> Result<Vec<String>, APIError> {
 
     let mut response = client
         .make_request(get_endpoint!("all_achievement_groups"))
@@ -257,8 +264,10 @@ pub fn get_achievement_group_ids(client: &APIClient)
 ///     "65B4B678-607E-4D97-B458-076C3E96A810"
 /// );
 /// ```
-pub fn get_achievement_group(client: &APIClient, id: &str)
-    -> Result<AchievementGroup, APIError> {
+pub fn get_achievement_group(
+    client: &APIClient,
+    id: &str
+) -> Result<AchievementGroup, APIError> {
 
     let param = string_to_param("id", id);
     let mut response = client
@@ -295,8 +304,10 @@ pub fn get_achievement_group(client: &APIClient, id: &str)
 ///     ]
 /// );
 /// ```
-pub fn get_achievement_groups(client: &APIClient, ids: Vec<&str>)
-    -> Result<Vec<AchievementGroup>, APIError> {
+pub fn get_achievement_groups(
+    client: &APIClient,
+    ids: Vec<&str>
+) -> Result<Vec<AchievementGroup>, APIError> {
 
     let param = strings_to_param("ids", ids);
     let mut response = client
@@ -326,8 +337,9 @@ pub fn get_achievement_groups(client: &APIClient, ids: Vec<&str>)
 ///
 /// let category_ids = get_achievement_category_ids(&client);
 /// ```
-pub fn get_achievement_category_ids(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_achievement_category_ids(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_request(get_endpoint!("all_achievement_categories"))
@@ -357,8 +369,10 @@ pub fn get_achievement_category_ids(client: &APIClient)
 ///
 /// let category = get_achievement_category(&client, 42);
 /// ```
-pub fn get_achievement_category(client: &APIClient, id: i32)
-    -> Result<AchievementCategory, APIError> {
+pub fn get_achievement_category(
+    client: &APIClient,
+    id: i32
+) -> Result<AchievementCategory, APIError> {
 
     let param = number_to_param("id", id);
     let mut response = client
@@ -389,8 +403,10 @@ pub fn get_achievement_category(client: &APIClient, id: i32)
 ///
 /// let categories = get_achievement_categories(&client, vec![1, 2, 3, 42]);
 /// ```
-pub fn get_achievement_categories(client: &APIClient, ids: Vec<i32>)
-    -> Result<Vec<AchievementCategory>, APIError> {
+pub fn get_achievement_categories(
+    client: &APIClient,
+    ids: Vec<i32>
+) -> Result<Vec<AchievementCategory>, APIError> {
 
     let param = numbers_to_param("ids", &ids);
     let mut response = client

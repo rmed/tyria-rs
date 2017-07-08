@@ -66,12 +66,6 @@ macro_rules! get_endpoint {
     ("skins") => {"/v2/account/skins"};
     ("titles") => {"/v2/account/titles"};
     ("wallet") => {"/v2/account/wallet"};
-    ("characters") => {"/v2/characters"};
-    ("transactions") => {"/v2/commerce/transactions"};
-    ("pvp-stats") => {"/v2/pvp/stats"};
-    ("pvp-games") => {"/v2/pvp/games"};
-    ("pvp-standings") => {"/v2/pvp/standings"};
-    ("tokeninfo") => {"/v2/tokeninfo"};
 }
 
 
@@ -91,8 +85,9 @@ macro_rules! get_endpoint {
 ///
 /// let my_account = get_account(&client);
 /// ```
-pub fn get_account(client: &APIClient)
-    -> Result<Account, APIError> {
+pub fn get_account(
+    client: &APIClient
+) -> Result<Account, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("account"))
@@ -121,8 +116,9 @@ pub fn get_account(client: &APIClient)
 ///
 /// let my_achievements = get_account_achievements(&client);
 /// ```
-pub fn get_account_achievements(client: &APIClient)
-    -> Result<Vec<AccountAchievement>, APIError> {
+pub fn get_account_achievements(
+    client: &APIClient
+) -> Result<Vec<AccountAchievement>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("achievements"))
@@ -151,15 +147,16 @@ pub fn get_account_achievements(client: &APIClient)
 ///
 /// let my_vault = get_account_bank(&client);
 /// ```
-pub fn get_account_bank(client: &APIClient)
-    -> Result<Vec<BankSlot>, APIError> {
+pub fn get_account_bank(
+    client: &APIClient
+) -> Result<Vec<Option<BankSlot>>, APIError> {
 
     //TODO check behaviour for empty slots
     let mut response = client
         .make_authenticated_request(&get_endpoint!("bank"))
         .expect("failed to get account bank");
 
-    parse_response::<Vec<BankSlot>>(
+    parse_response::<Vec<Option<BankSlot>>>(
         &mut response,
         StatusCode::Ok,
         vec![StatusCode::Forbidden]
@@ -182,8 +179,9 @@ pub fn get_account_bank(client: &APIClient)
 ///
 /// let my_dungeons = get_account_dungeons(&client);
 /// ```
-pub fn get_account_dungeons(client: &APIClient)
-    -> Result<Vec<String>, APIError> {
+pub fn get_account_dungeons(
+    client: &APIClient
+) -> Result<Vec<String>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("dungeons"))
@@ -212,8 +210,9 @@ pub fn get_account_dungeons(client: &APIClient)
 ///
 /// let my_dyes = get_account_dyes(&client);
 /// ```
-pub fn get_account_dyes(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_dyes(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("dyes"))
@@ -242,8 +241,9 @@ pub fn get_account_dyes(client: &APIClient)
 ///
 /// let my_finishers = get_account_finishers(&client);
 /// ```
-pub fn get_account_finishers(client: &APIClient)
-    -> Result<Vec<AccountFinisher>, APIError> {
+pub fn get_account_finishers(
+    client: &APIClient
+) -> Result<Vec<AccountFinisher>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("finishers"))
@@ -272,8 +272,9 @@ pub fn get_account_finishers(client: &APIClient)
 ///
 /// let my_cats = get_account_cats(&client);
 /// ```
-pub fn get_account_cats(client: &APIClient)
-    -> Result<Vec<Cat>, APIError> {
+pub fn get_account_cats(
+    client: &APIClient
+) -> Result<Vec<Cat>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("cats"))
@@ -302,8 +303,9 @@ pub fn get_account_cats(client: &APIClient)
 ///
 /// let my_nodes = get_account_nodes(&client);
 /// ```
-pub fn get_account_nodes(client: &APIClient)
-    -> Result<Vec<String>, APIError> {
+pub fn get_account_nodes(
+    client: &APIClient
+) -> Result<Vec<String>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("nodes"))
@@ -332,8 +334,9 @@ pub fn get_account_nodes(client: &APIClient)
 ///
 /// let my_inventory = get_account_inventory(&client);
 /// ```
-pub fn get_account_inventory(client: &APIClient)
-    -> Result<Vec<Option<InventorySlot>>, APIError> {
+pub fn get_account_inventory(
+    client: &APIClient
+) -> Result<Vec<Option<InventorySlot>>, APIError> {
 
     //TODO check behaviour with empty slots
     let mut response = client
@@ -363,8 +366,9 @@ pub fn get_account_inventory(client: &APIClient)
 ///
 /// let my_masteries = get_account_masteries(&client);
 /// ```
-pub fn get_account_masteries(client: &APIClient)
-    -> Result<Vec<AccountMastery>, APIError> {
+pub fn get_account_masteries(
+    client: &APIClient
+) -> Result<Vec<AccountMastery>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("masteries"))
@@ -393,8 +397,9 @@ pub fn get_account_masteries(client: &APIClient)
 ///
 /// let my_materials = get_account_materials(&client);
 /// ```
-pub fn get_account_materials(client: &APIClient)
-    -> Result<Vec<AccountMaterial>, APIError> {
+pub fn get_account_materials(
+    client: &APIClient
+) -> Result<Vec<AccountMaterial>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("materials"))
@@ -423,8 +428,9 @@ pub fn get_account_materials(client: &APIClient)
 ///
 /// let my_minis = get_account_minis(&client);
 /// ```
-pub fn get_account_minis(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_minis(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("minis"))
@@ -453,8 +459,9 @@ pub fn get_account_minis(client: &APIClient)
 ///
 /// let my_outfits = get_account_outfits(&client);
 /// ```
-pub fn get_account_outfits(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_outfits(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("outfits"))
@@ -483,8 +490,9 @@ pub fn get_account_outfits(client: &APIClient)
 ///
 /// let my_raids = get_account_raids(&client);
 /// ```
-pub fn get_account_raids(client: &APIClient)
-    -> Result<Vec<String>, APIError> {
+pub fn get_account_raids(
+    client: &APIClient
+) -> Result<Vec<String>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("raids"))
@@ -513,8 +521,9 @@ pub fn get_account_raids(client: &APIClient)
 ///
 /// let my_recipes = get_account_recipes(&client);
 /// ```
-pub fn get_account_recipes(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_recipes(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("recipes"))
@@ -543,8 +552,9 @@ pub fn get_account_recipes(client: &APIClient)
 ///
 /// let my_skins = get_account_skins(&client);
 /// ```
-pub fn get_account_skins(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_skins(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("skins"))
@@ -573,8 +583,9 @@ pub fn get_account_skins(client: &APIClient)
 ///
 /// let my_outfits = get_account_titles(&client);
 /// ```
-pub fn get_account_titles(client: &APIClient)
-    -> Result<Vec<i32>, APIError> {
+pub fn get_account_titles(
+    client: &APIClient
+) -> Result<Vec<i32>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("titles"))
@@ -603,8 +614,9 @@ pub fn get_account_titles(client: &APIClient)
 ///
 /// let my_currencies = get_account_wallet(&client);
 /// ```
-pub fn get_account_wallet(client: &APIClient)
-    -> Result<Vec<AccountCurrency>, APIError> {
+pub fn get_account_wallet(
+    client: &APIClient
+) -> Result<Vec<AccountCurrency>, APIError> {
 
     let mut response = client
         .make_authenticated_request(&get_endpoint!("wallet"))
