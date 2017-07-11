@@ -633,6 +633,17 @@ pub struct EquipmentStats {
     attributes: Option<EquipmentAttributes>,
 }
 
+/// Details on currency exchange rate
+#[derive(Deserialize, Debug)]
+pub struct ExchangeRate {
+    /// Number of coins required for a single gem, or the number of coins
+    /// obtained for a single gem
+    coins_per_gem: i32,
+    /// Number of gems obtained for the specified quantity of coins, or the
+    /// number of coins obtained for the specified quantity of gems
+    quantity: i32
+}
+
 /// Shared inventory slot
 #[derive(Deserialize, Debug)]
 pub struct InventorySlot {
@@ -688,4 +699,69 @@ pub struct SABZone {
     world: i32,
     /// Zone number
     zone: i32
+}
+
+/// Item listed in the trading post
+#[derive(Deserialize, Debug)]
+pub struct TPItem {
+    /// Item ID
+    id: i32,
+    /// A list of all buy listings, ascending from lowest buy order
+    #[serde(default)]
+    buys: Vec<TPItemListing>,
+    /// A list of all sell listings, ascending from lowest sell offer
+    #[serde(default)]
+    sells: Vec<TPItemListing>
+}
+
+/// Information about an item in the trading post
+#[derive(Deserialize, Debug)]
+pub struct TPItemInfo {
+    /// Number ID
+    id: i32,
+    /// Whether a free to play account can purchase or sell the item in the
+    /// trading post
+    whitelisted: bool,
+    /// Buy information
+    buys: TPItemInfoPrice,
+    /// Sell information
+    sells: TPItemInfoPrice
+}
+
+/// Price information on an item
+#[derive(Deserialize, Debug)]
+pub struct TPItemInfoPrice {
+    /// Highest buy order or lowest sell offer price in coins
+    unit_price: i32,
+    /// Amount of items being sold/bought
+    quantity: i32
+}
+
+/// Trading post item listing details
+#[derive(Deserialize, Debug)]
+pub struct TPItemListing {
+    /// Number of individual listings this object refers to (e.g. two players
+    /// selling at the same price will end up in the same listing)
+    listings: i32,
+    /// Sell offer or buy order price in coins
+    unit_price: i32,
+    /// Amount of items being sold/bought in this listing
+    quantity: i32
+}
+
+/// Trading post transactions for an account
+#[derive(Deserialize, Debug)]
+pub struct TPTransaction {
+    /// ID of the transaction
+    id: i32,
+    /// Item ID
+    item_id: i32,
+    /// Price of the item in coins
+    price: i32,
+    /// Quantity of the item
+    quantity: i32,
+    /// Date of creation of the transaction
+    created: DateTime<Utc>,
+    /// Date of purchase (only for past transactions)
+    purchased: Option<DateTime<Utc>>
 }

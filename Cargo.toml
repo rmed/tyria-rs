@@ -13,6 +13,7 @@ doc = true
 
 [lib]
 name = "tyria"
+doctest = true
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }

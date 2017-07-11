@@ -25,10 +25,6 @@
 
 use client::APIClient;
 use util::{
-    number_to_param,
-    numbers_to_param,
-    string_to_param,
-    strings_to_param,
     parse_response
 };
 use types::{
