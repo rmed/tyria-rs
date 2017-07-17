@@ -29,6 +29,7 @@ use util::{
 };
 use types::{
     APIError,
+    APIKey,
     Account,
     AccountAchievement,
     AccountCurrency,
@@ -62,6 +63,7 @@ macro_rules! get_endpoint {
     ("skins") => {"/v2/account/skins"};
     ("titles") => {"/v2/account/titles"};
     ("wallet") => {"/v2/account/wallet"};
+    ("tokeninfo") => {"/v2/tokeninfo"};
 }
 
 
@@ -622,5 +624,36 @@ pub fn get_account_wallet(
         &mut response,
         StatusCode::Ok,
         vec![StatusCode::Forbidden]
+    )
+}
+
+/// Obtain information on the given token
+///
+/// # Arguments
+///
+/// * `client` - The client to use when performing API requests
+///
+/// # Example
+///
+/// ```
+/// use tyria::client::APIClient;
+/// use tyria::api_v2::account::get_token_info;
+///
+/// let client = APIClient::new("en", Some("mykey".to_string()));
+///
+/// let my_token = get_token_info(&client);
+/// ```
+pub fn get_token_info(
+    client: &APIClient
+) -> Result<APIKey, APIError> {
+
+    let mut response = client
+        .make_authenticated_request(&get_endpoint!("tokeninfo"))
+        .expect("failed to get API key details");
+
+    parse_response::<APIKey>(
+        &mut response,
+        StatusCode::Ok,
+        vec![StatusCode::NotFound, StatusCode::Forbidden]
     )
 }

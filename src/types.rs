@@ -42,6 +42,17 @@ impl APIError {
     }
 }
 
+/// API key details
+#[derive(Deserialize, Debug)]
+pub struct APIKey {
+    /// Requested API key
+    id: String,
+    /// Name given to the API key by the account owner (not escaped!)
+    name: String,
+    /// Which permissions the API key has
+    permissions: Vec<String>
+}
+
 /// User account
 #[derive(Deserialize, Debug)]
 pub struct Account {
