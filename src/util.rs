@@ -143,22 +143,22 @@ pub fn strings_to_param(param: &str, values: Vec<&str>) -> String {
 /// # Arguments
 ///
 /// * `response` - Response from the API
-/// * `valid` - Valid HTTP code that causes the data to be parsed
+/// * `valid` - Valid HTTP codes that cause the data to be parsed
 /// * `invalid` - Invalid HTTP codes that obtain an `APIError` with a message
 ///         from the API
 pub fn parse_response<T>(
     response: &mut Response,
-    valid: StatusCode,
+    valid: Vec<StatusCode>,
     invalid: Vec<StatusCode>
-) -> Result<T, APIError>
-where T: DeserializeOwned {
-
-    if response.status().eq(&valid) {
+) -> Result<T, APIError> where T: DeserializeOwned {
+    if valid.contains(response.status()) {
         return Ok(response.json::<T>().unwrap());
 
     } else if invalid.contains(response.status()) {
         return Err(response.json::<APIError>().unwrap());
     }
 
-    Err(APIError::new("unknown status code"))
+    Err(APIError::new(
+        format!("unknown status code: {}", response.status()).as_str()
+    ))
 }

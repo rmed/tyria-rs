@@ -22,6 +22,7 @@
 
 /// Type definitions for the deserialization of API results
 
+use std::collections::HashMap;
 use chrono::prelude::*;
 use chrono::DateTime;
 
@@ -39,6 +40,10 @@ impl APIError {
         APIError {
             text: text.to_string()
         }
+    }
+
+    pub fn description(&self) -> &str {
+        self.text.as_str()
     }
 }
 
@@ -72,8 +77,8 @@ pub struct Account {
     guild_leader: Vec<String>,
     /// Timestamp of when the account was created
     created: DateTime<Utc>,
-    /// Type of game the account has access to (F2P, base game, HoT, etc.)
-    access: String,
+    /// Type of game the account has access to (F2P, base game, HoT, PoF etc.)
+    access: Vec<String>,
     /// True if the player has bought a commander tag
     commander: bool,
     /// Account's personal fractal reward level (requires `progression` scope)
@@ -398,16 +403,23 @@ pub struct Character {
     recipes: Vec<i32>,
 
     /// Describes the utility skills equipped in PvE, PvP, and WvW
-    skills: CharacterSkills,
+    skills: CharacterSkillSets,
 
     /// Describes the specializations and traits equipped in PvE, PvP, and WvW
-    specializations: CharacterSpecializations,
+    specializations: CharacterSpecializationSet,
 
     /// Skill trees trained
-    training: Vec<CharacterTraining>,
+    training: Vec<CharacterSkillTree>,
 
     /// WvW abilities trained by the character
     wvw_abilities: Vec<CharacterWvWAbility>,
+}
+
+/// Character backstory
+#[derive(Deserialize, Debug)]
+pub struct CharacterBackstory {
+    /// Backstory answer IDs pertaining to character creation questions
+    backstory: Vec<String>
 }
 
 /// Core information of a character
@@ -437,6 +449,30 @@ pub struct CharacterCore {
     title: i32,
 }
 
+/// Unlocked crafting disciplines
+#[derive(Deserialize, Debug)]
+pub struct CharacterCrafting {
+    /// All crafting disciplines unlocked by the character
+    #[serde(default)]
+    crafting: Vec<CraftingDiscipline>
+}
+
+/// Current character equipment
+#[derive(Deserialize, Debug)]
+pub struct CharacterEquipment {
+    /// Each piece of equipment currently on the character
+    #[serde(default)]
+    equipment: Vec<Equipment>
+}
+
+/// Character inventory
+#[derive(Deserialize, Debug)]
+pub struct CharacterInventory {
+    /// List of bags in the inventory of the character
+    #[serde(default)]
+    bags: Vec<Bag>
+}
+
 /// PVP equipment setup
 #[derive(Deserialize, Debug)]
 pub struct CharacterPvPEquipment {
@@ -445,12 +481,25 @@ pub struct CharacterPvPEquipment {
     /// Id for the equipped PvP rune
     rune: i32,
     /// ID for all equipped PvP sigils
-    sigils: Vec<i32>
+    sigils: Vec<Option<i32>>
+}
+
+/// Recipes unlocked by the character
+#[derive(Deserialize, Debug)]
+pub struct CharacterRecipes {
+    #[serde(default)]
+    recipes: Vec<i32>
+}
+
+/// Current character skills
+#[derive(Deserialize, Debug)]
+pub struct CharacterSkills {
+    skills: CharacterSkillSets
 }
 
 /// Slotted character skills per game mode
 #[derive(Deserialize, Debug)]
-pub struct CharacterSkills {
+pub struct CharacterSkillSets {
     /// PvE character skill set
     pve: CharacterSkillSet,
     /// PvP character skill set
@@ -473,6 +522,12 @@ pub struct CharacterSkillSet {
 /// Current specializations and traits in a character
 #[derive(Deserialize, Debug)]
 pub struct CharacterSpecializations {
+    specializations: CharacterSpecializationSet
+}
+
+/// Current specializations and traits in a character
+#[derive(Deserialize, Debug)]
+pub struct CharacterSpecializationSet {
     /// PvE character specializations
     pve: Vec<CharacterSpecialization>,
     /// PvP character specializations
@@ -490,9 +545,16 @@ pub struct CharacterSpecialization {
     traits: Vec<i32>
 }
 
-/// Skill tree item
+/// Skill trees trained by the character
 #[derive(Deserialize, Debug)]
 pub struct CharacterTraining {
+    #[serde(default)]
+    training: Vec<CharacterSkillTree>
+}
+
+/// Skill tree item
+#[derive(Deserialize, Debug)]
+pub struct CharacterSkillTree {
     /// Skill tree ID
     id: i32,
     /// Shows how many hero points have been spent in this tree
@@ -667,6 +729,185 @@ pub struct InventorySlot {
     binding: String
 }
 
+/// Mastery details
+#[derive(Deserialize, Debug)]
+pub struct Mastery {
+    /// ID of the mastery
+    id: i32,
+    /// Name of the selected mastery
+    name: String,
+    /// Written out requirements to unlock the mastery track
+    requirement: String,
+    /// Order in which the mastery track appears in a list
+    order: i32,
+    /// Background URI for the mastery track
+    background: String,
+    /// In-game region in which the mastery track belongs
+    region: String,
+    /// Information of each mastery level
+    levels: Vec<MasteryLevel>
+}
+
+/// Information on mastery levels
+#[derive(Deserialize, Debug)]
+pub struct MasteryLevel {
+    /// Name for the given mastery
+    name: String,
+    /// In-game description for the given mastery
+    description: String,
+    /// In-game instructions for the given mastery
+    instruction: String,
+    /// Icon URI for the mastery
+    icon: String,
+    /// Amount of mastery points required to unlock the mastery
+    point_cost: i32,
+    /// Total amount of experience needed to train the given mastery level.
+    /// This total is non-cumulative between levels
+    exp_cost: i32
+}
+
+/// Outfit information
+#[derive(Deserialize, Debug)]
+pub struct Outfit {
+    /// ID of the outfit
+    id: i32,
+    /// Name of the outfit
+    name: String,
+    /// Icon URI of the selected outfit
+    icon: String,
+    /// Item IDs which unlock this outfit
+    unlock_items: Vec<i32>
+}
+
+/// Pet information
+#[derive(Deserialize, Debug)]
+pub struct Pet {
+    /// Pet ID
+    id: i32,
+    /// Pet name
+    name: String,
+    /// Pet description
+    description: String,
+    /// Icon URI for the pet
+    icon: String,
+    /// Skills of the pet
+    skills: Vec<PetSkill>
+}
+
+/// Pet skill details
+#[derive(Deserialize, Debug)]
+pub struct PetSkill {
+    /// ID of the skill
+    id: i32
+}
+
+/// Details on the given profession
+#[derive(Deserialize, Debug)]
+pub struct Profession {
+    /// Profession ID
+    id: String,
+    /// Name of the profession
+    name: String,
+    /// Icon URI for the profession
+    icon: String,
+    /// Large icon URI for the profession
+    icon_big: String,
+    /// List of specialization IDs
+    specializations: Vec<i32>,
+    /// List of training details
+    training: Vec<ProfessionTraining>,
+    /// Specific flags for the profession (NoRacialSkills, NoWeaponSwap)
+    #[serde(default)]
+    flags: Vec<String>,
+    /// Skills available to the profession
+    skills: Vec<ProfessionSkill>,
+    /// Weapon and weapon skills available to the profession
+    weapons: HashMap<String, ProfessionWeapon>
+}
+
+/// Class skills available to the profession
+#[derive(Deserialize, Debug)]
+pub struct ProfessionSkill {
+    /// ID of the skill
+    id: i32,
+    /// Where the skill can be equipped
+    slot: String,
+    /// Type of skill
+    #[serde(rename = "type")]
+    kind: String
+}
+
+/// Details on training for a given profession
+#[derive(Deserialize, Debug)]
+pub struct ProfessionTraining {
+    /// ID of the item type indicated by `category`
+    id: i32,
+    /// Category of the training object, may be:
+    /// Skills, Specializations, EliteSpecializations
+    category: String,
+    /// Name of the skill or specialization
+    name: String,
+    /// Track item details
+    track: Vec<ProfessionTrainingItem>
+}
+
+/// Skills and traits belonging to a specific training track
+#[derive(Deserialize, Debug)]
+pub struct ProfessionTrainingItem {
+    /// Cost to train this item
+    cost: i32,
+    /// Type of item, either a skill or a trait
+    #[serde(rename = "type")]
+    kind: String,
+    /// Skill ID (only if type is "Skill")
+    #[serde(default)]
+    skill_id: i32,
+    /// Trait ID (only if type is "Trait")
+    #[serde(default)]
+    trait_id: i32
+}
+
+/// Weapon details for a given profession
+#[derive(Deserialize, Debug)]
+pub struct ProfessionWeapon {
+    /// ID of the required specialization to use this weapon
+    #[serde(default)]
+    specialization: i32,
+    /// List of weapon skills
+    skills: Vec<ProfessionWeaponSkill>,
+    /// Where the weapon can be equipped
+    flags: Vec<String>
+}
+
+/// Weapon skills available to a profession
+#[derive(Deserialize, Debug)]
+pub struct ProfessionWeaponSkill {
+    /// ID of the skill
+    id: i32,
+    /// Skill bar slot that this skill can be used in
+    slot: String,
+    /// Offhand weapon type this skill requires to be equipped
+    #[serde(default)]
+    offhand: String,
+    /// Elementalist attunement that this skill requires
+    #[serde(default)]
+    attunement: String,
+    /// Name of the class the skill was stolen from (for Thief)
+    #[serde(default)]
+    source: String
+}
+
+/// Playable race details
+#[derive(Deserialize, Debug)]
+pub struct Race {
+    /// ID of the race
+    id: String,
+    /// Localized name of the race
+    name: String,
+    /// Racial skill IDs
+    skills: Vec<i32>
+}
+
 /// Character progress in Super Adventure Box
 #[derive(Deserialize, Debug)]
 pub struct SABProgress {
@@ -712,6 +953,27 @@ pub struct SABZone {
     zone: i32
 }
 
+/// Specialization details
+#[derive(Deserialize, Debug)]
+pub struct Specialization {
+    /// Specialization ID
+    id: i32,
+    /// Name of the specialization
+    name: String,
+    /// Profession that this specialization belongs to
+    profession: String,
+    /// Whether this is an elite specialization
+    elite: bool,
+    /// URI to the icon of the specialization
+    icon: String,
+    /// URI to the background of the specialization
+    background: String,
+    /// IDs of minor traits in the specialization
+    minor_traits: Vec<i32>,
+    /// IDs of major traits in the specialization
+    major_traitrs: Vec<i32>
+}
+
 /// Item listed in the trading post
 #[derive(Deserialize, Debug)]
 pub struct TPItem {
@@ -732,6 +994,7 @@ pub struct TPItemInfo {
     id: i32,
     /// Whether a free to play account can purchase or sell the item in the
     /// trading post
+    #[serde(default)]
     whitelisted: bool,
     /// Buy information
     buys: TPItemInfoPrice,
@@ -764,7 +1027,7 @@ pub struct TPItemListing {
 #[derive(Deserialize, Debug)]
 pub struct TPTransaction {
     /// ID of the transaction
-    id: i32,
+    id: i64,
     /// Item ID
     item_id: i32,
     /// Price of the item in coins

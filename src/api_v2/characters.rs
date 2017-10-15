@@ -25,19 +25,20 @@
 
 use client::APIClient;
 use util::{
-    string_to_param,
     parse_response
 };
 use types::{
     APIError,
-    Bag,
     Character,
+    CharacterBackstory,
     CharacterCore,
+    CharacterCrafting,
+    CharacterEquipment,
+    CharacterInventory,
+    CharacterRecipes,
     CharacterSkills,
     CharacterSpecializations,
     CharacterTraining,
-    CraftingDiscipline,
-    Equipment,
     SABProgress,
 };
 
@@ -67,32 +68,20 @@ macro_rules! get_endpoint {
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character name to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_character = get_character(&client, "My Char");
-/// ```
 pub fn get_character(
     client: &APIClient,
     name: &str
 ) -> Result<Character, APIError> {
-
-    let param = string_to_param("id", name);
     let mut response = client
-        .make_request(&get_endpoint!("character", param))
+        .make_authenticated_request(&get_endpoint!("character", name))
         .expect("failed to get character");
 
-    parse_response::<Character>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound, StatusCode::Forbidden]
     )
 }
@@ -101,33 +90,25 @@ pub fn get_character(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to obtain backstory for
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_backstory;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_backstory = get_character_backstory(&client, "My Char");
-/// ```
 pub fn get_character_backstory(
     client: &APIClient,
     name: &str
-) -> Result<Vec<String>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<CharacterBackstory, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("backstory", param))
+        .make_authenticated_request(&get_endpoint!("backstory", name))
         .expect("failed to get character backstory");
 
-    parse_response::<Vec<String>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -136,33 +117,25 @@ pub fn get_character_backstory(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_core;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_character = get_character_core(&client, "My Char");
-/// ```
 pub fn get_character_core(
     client: &APIClient,
     name: &str
 ) -> Result<CharacterCore, APIError> {
-
-    let param = string_to_param("id", name);
     let mut response = client
-        .make_request(&get_endpoint!("core", param))
+        .make_authenticated_request(&get_endpoint!("core", name))
         .expect("failed to get character information");
 
-    parse_response::<CharacterCore>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -170,33 +143,25 @@ pub fn get_character_core(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_crafting;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_crafting = get_character_crafting(&client, "My Char");
-/// ```
 pub fn get_character_crafting(
     client: &APIClient,
     name: &str
-) -> Result<Vec<CraftingDiscipline>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<CharacterCrafting, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("crafting", param))
+        .make_authenticated_request(&get_endpoint!("crafting", name))
         .expect("failed to get crafting disciplines");
 
-    parse_response::<Vec<CraftingDiscipline>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -204,33 +169,25 @@ pub fn get_character_crafting(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_equipment;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_equipment = get_character_equipment(&client, "My Char");
-/// ```
 pub fn get_character_equipment(
     client: &APIClient,
     name: &str
-) -> Result<Vec<Equipment>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<CharacterEquipment, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("equip", param))
+        .make_authenticated_request(&get_endpoint!("equip", name))
         .expect("failed to get character equipment");
 
-    parse_response::<Vec<Equipment>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -238,34 +195,25 @@ pub fn get_character_equipment(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character name to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_heropoints;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_hp = get_character_heropoints(&client, "My Char");
-/// ```
 pub fn get_character_heropoints(
     client: &APIClient,
     name: &str
-)
-    -> Result<Vec<String>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<Vec<String>, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("hp", param))
+        .make_authenticated_request(&get_endpoint!("hp", name))
         .expect("failed to get hero points");
 
-    parse_response::<Vec<String>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -273,33 +221,25 @@ pub fn get_character_heropoints(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_inventory;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_skills = get_character_inventory(&client, "My Char");
-/// ```
 pub fn get_character_inventory(
     client: &APIClient,
     name: &str
-) -> Result<Vec<Bag>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<CharacterInventory, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("inv", param))
+        .make_authenticated_request(&get_endpoint!("inv", name))
         .expect("failed to get character inventory");
 
-    parse_response::<Vec<Bag>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -307,29 +247,18 @@ pub fn get_character_inventory(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_names;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_characters = get_character_names(&client);
-/// ```
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 pub fn get_character_names(
     client: &APIClient
 ) -> Result<Vec<String>, APIError> {
-
     let mut response = client
         .make_authenticated_request(&get_endpoint!("names"))
         .expect("failed to get character names");
 
-    parse_response::<Vec<String>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::Forbidden]
     )
 }
@@ -338,33 +267,25 @@ pub fn get_character_names(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character name to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_recipes;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_recipes = get_character_recipes(&client, "My Char");
-/// ```
 pub fn get_character_recipes(
     client: &APIClient,
     name: &str
-) -> Result<Vec<i32>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<CharacterRecipes, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("recipes", param))
+        .make_authenticated_request(&get_endpoint!("recipes", name))
         .expect("failed to get unlocked recipes");
 
-    parse_response::<Vec<i32>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -372,32 +293,20 @@ pub fn get_character_recipes(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character name to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_sab;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_character = get_character_sab(&client, "My Char");
-/// ```
 pub fn get_character_sab(
     client: &APIClient,
     name: &str
-) -> Result<Vec<SABProgress>, APIError> {
-
-    let param = string_to_param("id", name);
+) -> Result<SABProgress, APIError> {
     let mut response = client
-        .make_request(&get_endpoint!("sab", param))
+        .make_authenticated_request(&get_endpoint!("sab", name))
         .expect("failed to get SAB progress");
 
-    parse_response::<Vec<SABProgress>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound, StatusCode::Forbidden]
     )
 }
@@ -406,33 +315,25 @@ pub fn get_character_sab(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_skills;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_skills = get_character_skills(&client, "My Char");
-/// ```
 pub fn get_character_skills(
     client: &APIClient,
     name: &str
 ) -> Result<CharacterSkills, APIError> {
-
-    let param = string_to_param("id", name);
     let mut response = client
-        .make_request(&get_endpoint!("skills", param))
+        .make_authenticated_request(&get_endpoint!("skills", name))
         .expect("failed to get character skills");
 
-    parse_response::<CharacterSkills>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -440,33 +341,25 @@ pub fn get_character_skills(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_specializations;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_specs = get_character_specializations(&client, "My Char");
-/// ```
 pub fn get_character_specializations(
     client: &APIClient,
     name: &str
 ) -> Result<CharacterSpecializations, APIError> {
-
-    let param = string_to_param("id", name);
     let mut response = client
-        .make_request(&get_endpoint!("specs", param))
+        .make_authenticated_request(&get_endpoint!("specs", name))
         .expect("failed to get character specializations");
 
-    parse_response::<CharacterSpecializations>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
 }
 
@@ -474,32 +367,157 @@ pub fn get_character_specializations(
 ///
 /// # Arguments
 ///
-/// * `client` - The client to use when performing API requests
+/// * `client` - The client to use when performing API requests. Requires
+///     authentication token
 /// * `name` - Character to fetch
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::characters::get_character_training;
-///
-/// let client = APIClient::new("en", Some("mykey".to_string()));
-///
-/// let my_training = get_character_training(&client, "My Char");
-/// ```
 pub fn get_character_training(
     client: &APIClient,
     name: &str
 ) -> Result<CharacterTraining, APIError> {
-
-    let param = string_to_param("id", name);
     let mut response = client
-        .make_request(&get_endpoint!("training", param))
+        .make_authenticated_request(&get_endpoint!("training", name))
         .expect("failed to get character training");
 
-    parse_response::<CharacterTraining>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
-        vec![StatusCode::NotFound, StatusCode::Forbidden]
+        vec![StatusCode::Ok],
+        vec![
+            StatusCode::NotFound,
+            StatusCode::Forbidden,
+            StatusCode::BadRequest
+        ]
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use std::env;
+    use client::APIClient;
+    use api_v2::characters::*;
+
+    macro_rules! parse_test {
+        ($result:expr) => {
+            match $result {
+                Ok(_) => assert!(true),
+                Err(e) => panic!(e.description().to_string()),
+            };
+        }
+    }
+
+    fn setup_client() -> APIClient {
+        match env::var("TOKEN") {
+            Ok(token) => APIClient::new("en", Some(token.to_string())),
+            Err(_) => panic!("Need a token to test endpoint"),
+        }
+    }
+
+    fn set_name() -> String {
+        match env::var("CHAR_NAME") {
+            Ok(name) => name,
+            Err(_) => panic!("Need a character name to test endpoint"),
+        }
+    }
+
+    #[test]
+    fn character() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_backstory() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_backstory(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_core() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_core(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_crafting() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_crafting(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_equipment() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_equipment(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_heropoints() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_heropoints(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_inventory() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_inventory(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_names() {
+        let client = setup_client();
+        let result = get_character_names(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_recipes() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_recipes(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_sab() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_sab(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_skills() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_skills(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_specializations() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_specializations(&client, &name.as_str());
+        parse_test!(result);
+    }
+
+    #[test]
+    fn character_training() {
+        let client = setup_client();
+        let name = set_name();
+        let result = get_character_training(&client, &name.as_str());
+        parse_test!(result);
+    }
 }

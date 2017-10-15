@@ -61,24 +61,14 @@ macro_rules! get_endpoint {
 /// # Arguments
 ///
 /// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_ids;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let achievement_ids = get_achievement_ids(&client);
-/// ```
 pub fn get_achievement_ids(client: &APIClient) -> Result<Vec<i32>, APIError> {
-    let mut response = client.make_request(get_endpoint!("all_achievements"))
+    let mut response = client
+        .make_request(get_endpoint!("all_achievements"))
         .expect("failed to get achievement IDs");
 
-    parse_response::<Vec<i32>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -89,30 +79,18 @@ pub fn get_achievement_ids(client: &APIClient) -> Result<Vec<i32>, APIError> {
 ///
 /// * `client` - The client to use when performing API requests
 /// * `id` - ID to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let achievement_ids = get_achievement(&client, 42);
-/// ```
 pub fn get_achievement(
     client: &APIClient,
     id: i32
 ) -> Result<Achievement, APIError> {
-
     let param = number_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievements_id", param))
         .expect("failed to get achievement");
 
-    parse_response::<Achievement>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -123,30 +101,18 @@ pub fn get_achievement(
 ///
 /// * `client` - The client to use when performing API requests
 /// * `ids` - IDs to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievements;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let achievement_ids = get_achievements(&client, vec![1, 2, 42]);
-/// ```
 pub fn get_achievements(
     client: &APIClient,
     ids: Vec<i32>
 ) -> Result<Vec<Achievement>, APIError> {
-
     let params = numbers_to_param("ids", &ids);
     let mut response = client
         .make_request(&get_endpoint!("achievements_id", params))
         .expect("failed to get achievements");
 
-    parse_response::<Vec<Achievement>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok, StatusCode::PartialContent],
         vec![StatusCode::NotFound]
     )
 }
@@ -156,28 +122,16 @@ pub fn get_achievements(
 /// # Arguments
 ///
 /// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_daily_achievements;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let achievements = get_daily_achievements(&client);
-/// ```
 pub fn get_daily_achievements(
     client: &APIClient
 ) -> Result<DailyAchievements, APIError> {
-
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements"))
         .expect("failed to get achievements");
 
-    parse_response::<DailyAchievements>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -187,28 +141,16 @@ pub fn get_daily_achievements(
 /// # Arguments
 ///
 /// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_daily_achievements_tomorrow;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let achievements = get_daily_achievements_tomorrow(&client);
-/// ```
 pub fn get_daily_achievements_tomorrow(
     client: &APIClient
 ) -> Result<DailyAchievements, APIError> {
-
     let mut response = client
         .make_request(&get_endpoint!("daily_achievements_tomorrow"))
         .expect("failed to get achievements");
 
-    parse_response::<DailyAchievements>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -218,28 +160,16 @@ pub fn get_daily_achievements_tomorrow(
 /// # Arguments
 ///
 /// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_group_ids;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let group_ids = get_achievement_group_ids(&client);
-/// ```
 pub fn get_achievement_group_ids(
     client: &APIClient
 ) -> Result<Vec<String>, APIError> {
-
     let mut response = client
         .make_request(get_endpoint!("all_achievement_groups"))
         .expect("failed to get group IDs");
 
-    parse_response::<Vec<String>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -250,33 +180,18 @@ pub fn get_achievement_group_ids(
 ///
 /// * `client` - The client to use when performing API requests
 /// * `id` - ID to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_group;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let group = get_achievement_group(
-///     &client,
-///     "65B4B678-607E-4D97-B458-076C3E96A810"
-/// );
-/// ```
 pub fn get_achievement_group(
     client: &APIClient,
     id: &str
 ) -> Result<AchievementGroup, APIError> {
-
     let param = string_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievement_groups_id", param))
         .expect("failed to get group");
 
-    parse_response::<AchievementGroup>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -287,36 +202,18 @@ pub fn get_achievement_group(
 ///
 /// * `client` - The client to use when performing API requests
 /// * `ids` - IDs to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_groups;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let group = get_achievement_groups(
-///     &client,
-///     vec![
-///         "65B4B678-607E-4D97-B458-076C3E96A810",
-///         "1CAFA333-0C2B-4782-BC4C-7DA30E9CE289"
-///     ]
-/// );
-/// ```
 pub fn get_achievement_groups(
     client: &APIClient,
     ids: Vec<&str>
 ) -> Result<Vec<AchievementGroup>, APIError> {
-
     let param = strings_to_param("ids", ids);
     let mut response = client
         .make_request(&get_endpoint!("achievement_groups_id", param))
         .expect("failed to get groups");
 
-    parse_response::<Vec<AchievementGroup>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok, StatusCode::PartialContent],
         vec![StatusCode::NotFound]
     )
 }
@@ -326,28 +223,16 @@ pub fn get_achievement_groups(
 /// # Arguments
 ///
 /// * `client` - The client to use when performing API requests
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_category_ids;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let category_ids = get_achievement_category_ids(&client);
-/// ```
 pub fn get_achievement_category_ids(
     client: &APIClient
 ) -> Result<Vec<i32>, APIError> {
-
     let mut response = client
         .make_request(get_endpoint!("all_achievement_categories"))
         .expect("failed to get category IDs");
 
-    parse_response::<Vec<i32>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -358,30 +243,18 @@ pub fn get_achievement_category_ids(
 ///
 /// * `client` - The client to use when performing API requests
 /// * `id` - ID to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_category;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let category = get_achievement_category(&client, 42);
-/// ```
 pub fn get_achievement_category(
     client: &APIClient,
     id: i32
 ) -> Result<AchievementCategory, APIError> {
-
     let param = number_to_param("id", id);
     let mut response = client
         .make_request(&get_endpoint!("achievement_categories_id", param))
         .expect("failed to get category");
 
-    parse_response::<AchievementCategory>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok],
         vec![StatusCode::NotFound]
     )
 }
@@ -392,30 +265,119 @@ pub fn get_achievement_category(
 ///
 /// * `client` - The client to use when performing API requests
 /// * `ids` - IDs to fetch from the server
-///
-/// # Example
-///
-/// ```
-/// use tyria::client::APIClient;
-/// use tyria::api_v2::achievements::get_achievement_categories;
-///
-/// let client = APIClient::new("en", None);
-///
-/// let categories = get_achievement_categories(&client, vec![1, 2, 3, 42]);
-/// ```
 pub fn get_achievement_categories(
     client: &APIClient,
     ids: Vec<i32>
 ) -> Result<Vec<AchievementCategory>, APIError> {
-
     let param = numbers_to_param("ids", &ids);
     let mut response = client
         .make_request(&get_endpoint!("achievement_categories_id", param))
         .expect("failed to get categories");
 
-    parse_response::<Vec<AchievementCategory>>(
+    parse_response(
         &mut response,
-        StatusCode::Ok,
+        vec![StatusCode::Ok, StatusCode::PartialContent],
         vec![StatusCode::NotFound]
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use client::APIClient;
+    use api_v2::achievements::*;
+
+    macro_rules! parse_test {
+        ($result:expr) => {
+            match $result {
+                Ok(_) => assert!(true),
+                Err(e) => panic!(e.description().to_string()),
+            };
+        }
+    }
+
+    #[test]
+    fn achievement_ids() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_ids(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement(&client, 1);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievements() {
+        let client = APIClient::new("en", None);
+        let result = get_achievements(&client, vec![1, 2, 3]);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn daily_achievements() {
+        let client = APIClient::new("en", None);
+        let result = get_daily_achievements(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn daily_achievements_tomorrow() {
+        let client = APIClient::new("en", None);
+        let result = get_daily_achievements_tomorrow(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_group_ids() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_group_ids(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_group() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_group(
+            &client,
+            "65B4B678-607E-4D97-B458-076C3E96A810"
+        );
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_groups() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_groups(
+            &client,
+            vec![
+                "65B4B678-607E-4D97-B458-076C3E96A810",
+                "A4ED8379-5B6B-4ECC-B6E1-70C350C902D2"
+            ]
+        );
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_category_ids() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_category_ids(&client);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_category() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_category(&client, 1);
+        parse_test!(result);
+    }
+
+    #[test]
+    fn achievement_categories() {
+        let client = APIClient::new("en", None);
+        let result = get_achievement_categories(&client, vec![1, 2]);
+        parse_test!(result);
+    }
 }
