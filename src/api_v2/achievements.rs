@@ -23,15 +23,15 @@
 /// Achievement endpoints
 
 use client::APIClient;
-use util::{
+use common::{
+    APIError,
     number_to_param,
     numbers_to_param,
     string_to_param,
     strings_to_param,
     parse_response
 };
-use types::{
-    APIError,
+use api_v2::types::{
     Achievement,
     AchievementCategory,
     AchievementGroup,

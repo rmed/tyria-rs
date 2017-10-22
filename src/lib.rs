@@ -30,7 +30,6 @@ extern crate serde_derive;
 extern crate serde;
 extern crate serde_json;
 
-pub mod util;
+pub mod common;
 pub mod client;
-pub mod types;
 pub mod api_v2;

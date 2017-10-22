@@ -27,26 +27,6 @@ use chrono::prelude::*;
 use chrono::DateTime;
 
 
-/// API errors
-#[derive(Deserialize, Debug)]
-pub struct APIError {
-    /// Error description provided by the API
-    text: String
-}
-
-/// Used when defining miscelaneous errors
-impl APIError {
-    pub fn new(text: &str) -> APIError {
-        APIError {
-            text: text.to_string()
-        }
-    }
-
-    pub fn description(&self) -> &str {
-        self.text.as_str()
-    }
-}
-
 /// API key details
 #[derive(Deserialize, Debug)]
 pub struct APIKey {
@@ -176,7 +156,7 @@ pub struct Achievement {
     locked_text: String,
     /// Achievement type
     #[serde(rename = "type")]
-    kind: String,
+    achievement_type: String,
     /// Achievement categories
     flags: Vec<String>,
     /// Describes the achievement's tiers
@@ -200,7 +180,7 @@ pub struct Achievement {
 pub struct AchievementBit {
     /// Type of bit (`Text`, `Item`, `Minipet`, `Skin`)
     #[serde(rename = "type")]
-    kind: String,
+    bit_type: String,
     /// ID of the item, mini, or skin, if applicable
     #[serde(default)]
     id: i32,
@@ -255,7 +235,7 @@ pub struct AchievementGroup {
 pub struct AchievementReward {
     /// Type of reward (`Coins`, `Item`, `Mastery`, `Title`)
     #[serde(rename = "type")]
-    kind: String,
+    reward_type: String,
     /// ID of reward (when type is `Item`, `Mastery`, or `Title`)
     #[serde(default)]
     id: i32,
@@ -849,7 +829,7 @@ pub struct ProfessionSkill {
     slot: String,
     /// Type of skill
     #[serde(rename = "type")]
-    kind: String
+    skill_type: String
 }
 
 /// Details on training for a given profession
@@ -873,7 +853,7 @@ pub struct ProfessionTrainingItem {
     cost: i32,
     /// Type of item, either a skill or a trait
     #[serde(rename = "type")]
-    kind: String,
+    item_type: String,
     /// Skill ID (only if type is "Skill")
     #[serde(default)]
     skill_id: i32,

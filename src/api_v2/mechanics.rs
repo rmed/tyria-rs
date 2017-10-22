@@ -23,15 +23,15 @@
 /// Core game mechanics endpoints
 
 use client::APIClient;
-use util::{
+use common::{
+    APIError,
     number_to_param,
     numbers_to_param,
     string_to_param,
     strings_to_param,
     parse_response
 };
-use types::{
-    APIError,
+use api_v2::types::{
     Legend,
     Mastery,
     Outfit,
@@ -601,7 +601,7 @@ pub fn get_legends(
 #[cfg(test)]
 mod tests {
     use client::APIClient;
-    use api_v2::core::*;
+    use api_v2::mechanics::*;
 
     macro_rules! parse_test {
         ($result:expr) => {

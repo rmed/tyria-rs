@@ -24,11 +24,11 @@
 /// These require an API key to view
 
 use client::APIClient;
-use util::{
+use common::{
+    APIError,
     parse_response
 };
-use types::{
-    APIError,
+use api_v2::types::{
     APIKey,
     Account,
     AccountAchievement,

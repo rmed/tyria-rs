@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+pub mod types;
+
 pub mod achievements;
 pub mod account;
 pub mod characters;
 pub mod commerce;
-pub mod core;
+pub mod mechanics;

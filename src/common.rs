@@ -20,11 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// Utility code
+/// Common utility code
 
 use reqwest::{Response, StatusCode};
 use serde::de::DeserializeOwned;
-use types::APIError;
+
+
+/// API errors
+#[derive(Deserialize, Debug)]
+pub struct APIError {
+    /// Error description provided by the API
+    text: String
+}
+
+/// Used when defining miscelaneous errors
+impl APIError {
+    pub fn new(text: &str) -> APIError {
+        APIError {
+            text: text.to_string()
+        }
+    }
+
+    pub fn description(&self) -> &str {
+        self.text.as_str()
+    }
+}
+
+
 
 /// Make a parameter out of a number
 ///
