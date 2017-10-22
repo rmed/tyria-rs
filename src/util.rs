@@ -119,9 +119,9 @@ pub fn string_to_param(param: &str, value: &str) -> String {
 /// ```
 /// use tyria::util::strings_to_param;
 ///
-/// let result = strings_to_param("id", vec!["my-id", "my-id-2"]);
+/// let result = strings_to_param("id", &vec!["my-id", "my-id-2"]);
 /// ```
-pub fn strings_to_param(param: &str, values: Vec<&str>) -> String {
+pub fn strings_to_param(param: &str, values: &Vec<&str>) -> String {
     let mut result = String::new();
 
     // Add parameter label

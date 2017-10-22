@@ -206,7 +206,7 @@ pub fn get_achievement_groups(
     client: &APIClient,
     ids: Vec<&str>
 ) -> Result<Vec<AchievementGroup>, APIError> {
-    let param = strings_to_param("ids", ids);
+    let param = strings_to_param("ids", &ids);
     let mut response = client
         .make_request(&get_endpoint!("achievement_groups_id", param))
         .expect("failed to get groups");

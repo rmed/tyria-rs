@@ -729,6 +729,21 @@ pub struct InventorySlot {
     binding: String
 }
 
+/// Revenant legend details
+#[derive(Deserialize, Debug)]
+pub struct Legend {
+    /// Legend ID
+    id: String,
+    /// ID of the profession skill
+    swap: i32,
+    /// ID of the heal skill
+    heal: i32,
+    /// ID of the elite skill
+    elite: i32,
+    /// List of IDs of the utility skills
+    utilities: Vec<i32>
+}
+
 /// Mastery details
 #[derive(Deserialize, Debug)]
 pub struct Mastery {
@@ -953,6 +968,214 @@ pub struct SABZone {
     zone: i32
 }
 
+/// Skill usable by players in the game
+#[derive(Deserialize, Debug)]
+pub struct Skill {
+    /// Skill ID
+    id: i32,
+    name: String,
+    #[serde(default)]
+    description: String,
+    icon: String,
+    chat_link: String,
+    /// Skill type (Bundle, Elite, Heal, Profession, Utility, Weapon)
+    #[serde(rename = "type")]
+    skill_type: String,
+    /// Weapon the skill is on. Can be "None" if not applicable
+    weapon_type: String,
+    /// Professions that can use this skill
+    professions: Vec<String>,
+    /// Slot in which the skill fits into
+    /// (Downed_[1-4], Pet, Profession_[1-5], Utility, Weapon_[1-5])
+    slot: String,
+    /// Skill facts that describe the skill's effect
+    #[serde(default)]
+    facts: Vec<SkillFact>,
+    /// Skill facts that may apply to the skill depending on the trait choices
+    #[serde(default)]
+    traited_facts: Vec<SkillTraitedFact>,
+}
+
+/// Skill fact that describes the skill's effect
+#[derive(Deserialize, Debug)]
+pub struct SkillFact {
+    text: String,
+    #[serde(default)]
+    icon: String,
+    /// Defines additional fields of the object, can be:
+    /// AttributeAdjust, Buff, ComboField, ComboFinisher,
+    /// Damage, Distance, Duration, Heal, HealingADjust, NoData, Number,
+    /// Percent, PrefixedBuff, Radius, Range, Recharge, Time, Unblockable
+    #[serde(rename = "type")]
+    fact_type: String,
+
+    // AttributeAdjust, Number, Range, Recharge, Unblockable
+    //TODO check Unblockable, it is boolean
+    /// Amount that `target` gets adjusted, based on a level 80 character
+    /// stats, or the number value as referenced by `text`, or the range of
+    /// the trait/skill, or the recharge time in seconds, or true if type
+    /// is "Unblockable"
+    #[serde(default)]
+    value: Option<i32>,
+
+    // AttributeAdjust
+    /// Attribute this fact adjusts. A value of "Healing" indicates the fact
+    /// is a heal, and Ferocity is encoded as "CritDamage"
+    #[serde(default)]
+    target: Option<String>,
+
+    // Buff, PrefixedBuff
+    /// Boon, condition, or effect referred to by the fact
+    #[serde(default)]
+    status: Option<String>,
+    /// Description of status effect if any
+    #[serde(default)]
+    description: Option<String>,
+    /// Number of stacks applied
+    #[serde(default)]
+    apply_count: Option<i32>,
+
+    // Buff, Duration, PrefixedBuff, Time
+    /// Duration of the effect in seconds, or the time value in seconds
+    #[serde(default)]
+    duration: Option<i32>,
+
+    // ComboField
+    /// Type of field (Air, Dark, Fire, Ice, Light, Lightning, Posion, Smoke,
+    /// Ethereal, Water)
+    #[serde(default)]
+    field_type: Option<String>,
+
+    // ComboFinisher
+    /// Type of finisher (Blast, Leap, Projectile, Whirl)
+    #[serde(default)]
+    finisher_type: Option<String>,
+
+    // ComboFinisher, Percent
+    /// Percent chance that the finisher will trigger or the percentage value
+    /// as referenced by `text`
+    #[serde(default)]
+    percent: Option<i32>,
+
+    // Damage, Heal, HealingAdjust
+    /// Amount of times the damage hits or number of times the heal is applied
+    #[serde(default)]
+    hit_count: Option<i32>,
+
+    /// Damage multiplier value of the skill
+    #[serde(default)]
+    dmg_multiplier: Option<f32>,
+
+    // Distance, Radius
+    /// Distance value or radius value
+    #[serde(default)]
+    distance: Option<i32>,
+
+    // PrefixedBuff
+    /// Icon to show before the fact
+    #[serde(default)]
+    prefix: Option<SkillFactPrefix>,
+}
+
+/// Icon to show before skill fact
+#[derive(Deserialize, Debug)]
+pub struct SkillFactPrefix {
+    text: String,
+    icon: String,
+    status: String,
+    description: String
+}
+
+/// Skill fact that describes the skill's effect, based on selected traits
+#[derive(Deserialize, Debug)]
+pub struct SkillTraitedFact {
+    text: String,
+    #[serde(default)]
+    icon: String,
+    /// Defines additional fields of the object, can be:
+    /// AttributeAdjust, Buff, ComboField, ComboFinisher, Damage, Distance,
+    /// Duration, Heal, HealingADjust, NoData, Number, Percent, PrefixedBuff,
+    /// Radius, Range, Recharge, Time, Unblockable
+    #[serde(rename = "type")]
+    fact_type: String,
+
+    /// Which trait has to be selected in order for this fact to take effect
+    requires_trait: i32,
+    /// Array index of the facts object this fact overrides, if the trait
+    /// specified in `requires_trait` is selected. If this field is omitted,
+    /// then the fact contained within this object is to be appended to the
+    /// existing `facts` array
+    #[serde(default)]
+    overrides: Option<i32>,
+
+    // AttributeAdjust, Number, Range, Recharge, Unblockable
+    //TODO check Unblockable, it is boolean
+    /// Amount that `target` gets adjusted, based on a level 80 character
+    /// stats, or the number value as referenced by `text`, or the range of
+    /// the trait/skill, or the recharge time in seconds, or true if type
+    /// is "Unblockable"
+    #[serde(default)]
+    value: Option<i32>,
+
+    // AttributeAdjust
+    /// Attribute this fact adjusts. A value of "Healing" indicates the fact
+    /// is a heal, and Ferocity is encoded as "CritDamage"
+    #[serde(default)]
+    target: Option<String>,
+
+    // Buff, PrefixedBuff
+    /// Boon, condition, or effect referred to by the fact
+    #[serde(default)]
+    status: Option<String>,
+    /// Description of status effect if any
+    #[serde(default)]
+    description: Option<String>,
+    /// Number of stacks applied
+    #[serde(default)]
+    apply_count: Option<i32>,
+
+    // Buff, Duration, PrefixedBuff, Time
+    /// Duration of the effect in seconds, or the time value in seconds
+    #[serde(default)]
+    duration: Option<i32>,
+
+    // ComboField
+    /// Type of field (Air, Dark, Fire, Ice, Light, Lightning, Posion, Smoke,
+    /// Ethereal, Water)
+    #[serde(default)]
+    field_type: Option<String>,
+
+    // ComboFinisher
+    /// Type of finisher (Blast, Leap, Projectile, Whirl)
+    #[serde(default)]
+    finisher_type: Option<String>,
+
+    // ComboFinisher, Percent
+    /// Percent chance that the finisher will trigger or the percentage value
+    /// as referenced by `text`
+    #[serde(default)]
+    percent: Option<i32>,
+
+    // Damage, Heal, HealingAdjust
+    /// Amount of times the damage hits or number of times the heal is applied
+    #[serde(default)]
+    hit_count: Option<i32>,
+
+    /// Damage multiplier value of the skill
+    #[serde(default)]
+    dmg_multiplier: Option<f32>,
+
+    // Distance, Radius
+    /// Distance value or radius value
+    #[serde(default)]
+    distance: Option<i32>,
+
+    // PrefixedBuff
+    /// Icon to show before the fact
+    #[serde(default)]
+    prefix: Option<SkillFactPrefix>,
+}
+
 /// Specialization details
 #[derive(Deserialize, Debug)]
 pub struct Specialization {
@@ -971,7 +1194,7 @@ pub struct Specialization {
     /// IDs of minor traits in the specialization
     minor_traits: Vec<i32>,
     /// IDs of major traits in the specialization
-    major_traitrs: Vec<i32>
+    major_traits: Vec<i32>
 }
 
 /// Item listed in the trading post
@@ -1038,4 +1261,202 @@ pub struct TPTransaction {
     created: DateTime<Utc>,
     /// Date of purchase (only for past transactions)
     purchased: Option<DateTime<Utc>>
+}
+
+/// Trait details
+#[derive(Deserialize, Debug)]
+pub struct Trait {
+    /// ID of the trait
+    id: i32,
+    /// Name of the trait
+    name: String,
+    /// Icon URL of the trait
+    icon: String,
+    /// Description of the trait
+    description: String,
+    /// ID of the specialization this trait belongs to
+    specialization: i32,
+    /// Trait's tier (Adept, Master, Grandmaster) in a scale 0-3
+    tier: i32,
+    /// Either "Major" or "Minor" depending on the trait's slot
+    slot: String,
+    #[serde(default)]
+    facts: Vec<TraitFact>,
+    #[serde(default)]
+    traited_facts: Vec<TraitTraitedFact>,
+    #[serde(default)]
+    skills: Vec<Skill>
+}
+
+/// Trait fact that describes the trait's effect
+#[derive(Deserialize, Debug)]
+pub struct TraitFact {
+    text: String,
+    #[serde(default)]
+    icon: String,
+    /// Defines additional fields of the object, can be:
+    /// AttributeAdjust, Buff, BuffConversion ComboField, ComboFinisher,
+    /// Damage, Distance, Duration, Heal, HealingADjust, NoData, Number,
+    /// Percent, PrefixedBuff, Radius, Range, Recharge, Time, Unblockable
+    #[serde(rename = "type")]
+    fact_type: String,
+
+    // AttributeAdjust, Number, Range, Recharge, Unblockable
+    //TODO check Unblockable, it is boolean
+    /// Amount that `target` gets adjusted, based on a level 80 character
+    /// stats, or the number value as referenced by `text`, or the range of
+    /// the trait/skill, or the recharge time in seconds, or true if type
+    /// is "Unblockable"
+    #[serde(default)]
+    value: Option<i32>,
+
+    // AttributeAdjust, BuffConversion
+    /// Attribute this fact adjusts. A value of "Healing" indicates the fact
+    /// is a heal, and Ferocity is encoded as "CritDamage"
+    #[serde(default)]
+    target: Option<String>,
+
+    // Buff, PrefixedBuff
+    /// Boon, condition, or effect referred to by the fact
+    #[serde(default)]
+    status: Option<String>,
+    /// Description of status effect if any
+    #[serde(default)]
+    description: Option<String>,
+    /// Number of stacks applied
+    #[serde(default)]
+    apply_count: Option<i32>,
+
+    // Buff, Duration, PrefixedBuff, Time
+    /// Duration of the effect in seconds, or the time value in seconds
+    #[serde(default)]
+    duration: Option<i32>,
+
+    // BuffConversion
+    /// Attribute that is used to calculate the attribute gain
+    #[serde(default)]
+    source: Option<String>,
+
+    // ComboField
+    /// Type of field (Air, Dark, Fire, Ice, Light, Lightning, Posion, Smoke,
+    /// Ethereal, Water)
+    #[serde(default)]
+    field_type: Option<String>,
+
+    // ComboFinisher
+    /// Type of finisher (Blast, Leap, Projectile, Whirl)
+    #[serde(default)]
+    finisher_type: Option<String>,
+
+    // ComboFinisher, Percent
+    /// Percent chance that the finisher will trigger or the percentage value
+    /// as referenced by `text`
+    #[serde(default)]
+    percent: Option<i32>,
+
+    // Damage, Heal, HealingAdjust
+    /// Amount of times the damage hits or number of times the heal is applied
+    #[serde(default)]
+    hit_count: Option<i32>,
+
+    // Distance, Radius
+    /// Distance value or radius value
+    #[serde(default)]
+    distance: Option<i32>,
+
+    // PrefixedBuff
+    /// Icon to show before the fact
+    #[serde(default)]
+    prefix: Option<SkillFactPrefix>,
+}
+
+/// Trait fact that describes the trait's effect, based on selected traits
+#[derive(Deserialize, Debug)]
+pub struct TraitTraitedFact {
+    text: String,
+    #[serde(default)]
+    icon: String,
+    /// Defines additional fields of the object, can be:
+    /// AttributeAdjust, Buff, BuffConversion ComboField, ComboFinisher,
+    /// Damage, Distance, Duration, Heal, HealingADjust, NoData, Number,
+    /// Percent, PrefixedBuff, Radius, Range, Recharge, Time, Unblockable
+    #[serde(rename = "type")]
+    fact_type: String,
+
+    /// Which trait has to be selected in order for this fact to take effect
+    requires_trait: i32,
+    /// Array index of the facts object this fact overrides, if the trait
+    /// specified in `requires_trait` is selected. If this field is omitted,
+    /// then the fact contained within this object is to be appended to the
+    /// existing `facts` array
+    #[serde(default)]
+    overrides: Option<i32>,
+
+    // AttributeAdjust, Number, Range, Recharge, Unblockable
+    //TODO check Unblockable, it is boolean
+    /// Amount that `target` gets adjusted, based on a level 80 character
+    /// stats, or the number value as referenced by `text`, or the range of
+    /// the trait/skill, or the recharge time in seconds, or true if type
+    /// is "Unblockable"
+    #[serde(default)]
+    value: Option<i32>,
+
+    // AttributeAdjust, BuffConversion
+    /// Attribute this fact adjusts. A value of "Healing" indicates the fact
+    /// is a heal, and Ferocity is encoded as "CritDamage"
+    #[serde(default)]
+    target: Option<String>,
+
+    // Buff, PrefixedBuff
+    /// Boon, condition, or effect referred to by the fact
+    #[serde(default)]
+    status: Option<String>,
+    /// Description of status effect if any
+    #[serde(default)]
+    description: Option<String>,
+    /// Number of stacks applied
+    #[serde(default)]
+    apply_count: Option<i32>,
+
+    // Buff, Duration, PrefixedBuff, Time
+    /// Duration of the effect in seconds, or the time value in seconds
+    #[serde(default)]
+    duration: Option<i32>,
+
+    // BuffConversion
+    /// Attribute that is used to calculate the attribute gain
+    #[serde(default)]
+    source: Option<String>,
+
+    // ComboField
+    /// Type of field (Air, Dark, Fire, Ice, Light, Lightning, Posion, Smoke,
+    /// Ethereal, Water)
+    #[serde(default)]
+    field_type: Option<String>,
+
+    // ComboFinisher
+    /// Type of finisher (Blast, Leap, Projectile, Whirl)
+    #[serde(default)]
+    finisher_type: Option<String>,
+
+    // ComboFinisher, Percent
+    /// Percent chance that the finisher will trigger or the percentage value
+    /// as referenced by `text`
+    #[serde(default)]
+    percent: Option<i32>,
+
+    // Damage, Heal, HealingAdjust
+    /// Amount of times the damage hits or number of times the heal is applied
+    #[serde(default)]
+    hit_count: Option<i32>,
+
+    // Distance, Radius
+    /// Distance value or radius value
+    #[serde(default)]
+    distance: Option<i32>,
+
+    // PrefixedBuff
+    /// Icon to show before the fact
+    #[serde(default)]
+    prefix: Option<SkillFactPrefix>,
 }

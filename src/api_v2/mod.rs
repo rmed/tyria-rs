@@ -24,3 +24,4 @@ pub mod achievements;
 pub mod account;
 pub mod characters;
 pub mod commerce;
+pub mod core;
